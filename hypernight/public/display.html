@@ -5,27 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HyperNight — Live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --lead-r: 100;
-      --lead-g: 100;
-      --lead-b: 140;
-    }
 
     body {
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      background: #05050d;
+      background: #02020f;
       font-family: 'Inter', system-ui, sans-serif;
       color: #fff;
-      user-select: none;
     }
 
-    /* ── Liquid gradient background ── */
+    /* ── Aurora background ── */
     .bg {
       position: fixed;
       inset: 0;
@@ -33,49 +26,86 @@
       overflow: hidden;
     }
 
-    .blob {
+    /* Deep space base gradient */
+    .bg-base {
       position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 120% 80% at 50% 120%, #0a0a2e 0%, #02020f 70%);
+    }
+
+    /* Aurora bands */
+    .aurora-band {
+      position: absolute;
+      left: -30%;
+      width: 160%;
       border-radius: 50%;
-      filter: blur(90px);
-      will-change: transform;
-      /* color set via inline style updated by JS */
-      transition: background 4s ease;
+      filter: blur(50px);
+      opacity: 0;
+      mix-blend-mode: screen;
+      transition: background 5s ease, opacity 5s ease;
     }
 
-    .blob-1 {
-      width: 70vw; height: 70vw;
-      top: -25%; left: -15%;
-      opacity: 0.13;
-      animation: blobFloat1 14s ease-in-out infinite;
+    .band-1 {
+      height: 35vh;
+      top: 8%;
+      opacity: 0.18;
+      animation: auroraWave1 12s ease-in-out infinite;
     }
 
-    .blob-2 {
-      width: 55vw; height: 55vw;
-      bottom: -20%; right: -10%;
-      opacity: 0.09;
-      animation: blobFloat2 11s ease-in-out infinite;
+    .band-2 {
+      height: 28vh;
+      top: 20%;
+      opacity: 0.12;
+      animation: auroraWave2 16s ease-in-out infinite;
     }
 
-    .blob-3 {
-      width: 40vw; height: 40vw;
-      top: 40%; left: 30%;
-      opacity: 0.06;
-      animation: blobFloat3 17s ease-in-out infinite;
+    .band-3 {
+      height: 20vh;
+      top: 35%;
+      opacity: 0.08;
+      animation: auroraWave3 10s ease-in-out infinite;
     }
 
-    @keyframes blobFloat1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      30%       { transform: translate(4%, 9%) scale(1.08); }
-      65%       { transform: translate(-3%, 5%) scale(0.96); }
+    /* Star field */
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 72% 18%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 5%,  rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 28% 22%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 12%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 8%,  rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5%  40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(2px 2px at 50% 3%,  rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 33% 35%, rgba(255,255,255,0.3) 0%, transparent 100%);
+      animation: twinkle 6s ease-in-out infinite alternate;
     }
-    @keyframes blobFloat2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      40%       { transform: translate(-6%, -7%) scale(1.06); }
-      70%       { transform: translate(5%, -4%) scale(1.12); }
+
+    @keyframes twinkle {
+      0%   { opacity: 0.7; }
+      100% { opacity: 1; }
     }
-    @keyframes blobFloat3 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50%       { transform: translate(8%, -10%) scale(1.15); }
+
+    @keyframes auroraWave1 {
+      0%,100% { transform: translateX(0%) scaleY(1)   skewX(0deg); }
+      25%     { transform: translateX(6%) scaleY(1.2) skewX(2deg); }
+      50%     { transform: translateX(-4%) scaleY(0.8) skewX(-3deg); }
+      75%     { transform: translateX(8%) scaleY(1.1) skewX(1deg); }
+    }
+
+    @keyframes auroraWave2 {
+      0%,100% { transform: translateX(0%)  scaleY(1)   skewX(0deg); }
+      30%     { transform: translateX(-8%) scaleY(1.3) skewX(-2deg); }
+      60%     { transform: translateX(5%)  scaleY(0.9) skewX(4deg); }
+    }
+
+    @keyframes auroraWave3 {
+      0%,100% { transform: translateX(0%) scaleY(1); }
+      40%     { transform: translateX(10%) scaleY(1.4); }
+      80%     { transform: translateX(-6%) scaleY(0.7); }
     }
 
     /* ── Layout ── */
@@ -94,7 +124,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 2.5vh 0 1vh;
+      padding: 3vh 0 1.5vh;
       height: 20vh;
     }
 
@@ -102,54 +132,66 @@
       max-height: 100%;
       max-width: 45vw;
       object-fit: contain;
-      filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.18));
+      filter: drop-shadow(0 0 50px rgba(255,255,255,0.15)) brightness(1.1);
     }
 
     .logo-fallback {
       font-size: clamp(2.8rem, 7vw, 6rem);
       font-weight: 900;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      letter-spacing: 0.14em;
       color: #fff;
       text-shadow:
-        0 0 60px rgba(255, 255, 255, 0.25),
-        0 0 120px rgba(255, 255, 255, 0.1);
+        0 0 80px rgba(255,255,255,0.2),
+        0 0 160px rgba(160,180,255,0.1);
     }
 
-    .logo-fallback span { opacity: 0.45; }
+    .logo-fallback span { opacity: 0.35; font-weight: 300; }
 
-    /* ── Bars zone ── */
+    /* ── Bars area ── */
     .bars-area {
       flex: 1;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      gap: clamp(2rem, 6vw, 8rem);
-      padding: 0 8vw 4vh;
+      gap: clamp(2rem, 7vw, 9rem);
+      padding: 0 10vw 5vh;
       min-height: 0;
     }
 
     /* ── Team column ── */
     .team-col {
       flex: 1;
-      max-width: 26vw;
+      max-width: 24vw;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      height: 100%;
-      position: relative;
       justify-content: flex-end;
     }
 
-    /* ── Bar track (ghost rail) ── */
+    /* ── Bar track ── */
     .bar-track {
       width: 100%;
       flex: 1;
       position: relative;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 40px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
       overflow: visible;
+    }
+
+    /* Subtle track glow */
+    .bar-track::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(to top, transparent, rgba(255,255,255,0.04));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     /* ── Bar fill ── */
@@ -158,20 +200,12 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      min-height: 0;
-      border-radius: 10px 10px 6px 6px;
-      transition: height 0.85s cubic-bezier(0.34, 1.3, 0.64, 1);
+      border-radius: 40px;
+      transition: height 1s cubic-bezier(0.22, 1, 0.36, 1);
       overflow: hidden;
-      animation: barBreathe 4s ease-in-out infinite;
     }
 
-    @keyframes barBreathe {
-      0%, 100% { border-radius: 10px 10px 6px 6px; transform: scaleX(1); }
-      35%       { border-radius: 14px 8px  6px 6px; transform: scaleX(1.02); }
-      70%       { border-radius: 8px  14px 6px 6px; transform: scaleX(0.99); }
-    }
-
-    /* shimmer stripe going upward */
+    /* Upward current animation */
     .bar-fill::after {
       content: '';
       position: absolute;
@@ -179,135 +213,147 @@
       background: linear-gradient(
         to top,
         transparent 0%,
-        rgba(255, 255, 255, 0.07) 40%,
-        rgba(255, 255, 255, 0.14) 55%,
-        transparent 75%
+        rgba(255,255,255,0.04) 35%,
+        rgba(255,255,255,0.11) 50%,
+        rgba(255,255,255,0.04) 65%,
+        transparent 100%
       );
-      background-size: 100% 200%;
-      animation: shimmerUp 2.5s ease-in-out infinite;
+      background-size: 100% 300%;
+      animation: currentUp 3s ease-in-out infinite;
     }
 
-    @keyframes shimmerUp {
-      0%   { background-position: 0% 100%; }
-      100% { background-position: 0% -100%; }
+    @keyframes currentUp {
+      0%   { background-position: 0% 200%; }
+      100% { background-position: 0% -200%; }
     }
 
-    /* light sheen at top */
+    /* Inner sheen */
     .bar-fill::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 40%;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent);
-      border-radius: inherit;
+      height: 50%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.08), transparent);
+      border-radius: 40px 40px 0 0;
       pointer-events: none;
-    }
-
-    /* ── Glow crown at the top of the fill ── */
-    .bar-glow {
-      position: absolute;
-      top: -6px;
-      left: 8%;
-      right: 8%;
-      height: 12px;
-      border-radius: 50%;
-      filter: blur(8px);
-      animation: glowPulse 1.8s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.65; transform: scaleX(0.85); }
-      50%       { opacity: 1;    transform: scaleX(1.15); }
     }
 
     /* ── Red ── */
     .team-red .bar-fill {
-      background: linear-gradient(to top, #4a0000 0%, #cc1111 55%, #ff5555 100%);
-      box-shadow: 0 0 30px rgba(255, 60, 60, 0.3), inset 0 0 20px rgba(255, 60, 60, 0.1);
+      background: linear-gradient(to top,
+        #1a0010 0%,
+        #8b0030 30%,
+        #dd1144 65%,
+        #ff5588 85%,
+        #ffaacc 100%
+      );
+      box-shadow: 0 0 40px rgba(220, 30, 80, 0.25), 0 0 80px rgba(220, 30, 80, 0.1);
     }
-    .team-red .bar-glow { background: #ff4040; box-shadow: 0 0 20px #ff4040; }
 
     /* ── Green ── */
     .team-green .bar-fill {
-      background: linear-gradient(to top, #002218 0%, #00aa55 55%, #00ff99 100%);
-      box-shadow: 0 0 30px rgba(0, 220, 110, 0.3), inset 0 0 20px rgba(0, 220, 110, 0.1);
+      background: linear-gradient(to top,
+        #001a0d 0%,
+        #004d22 30%,
+        #00aa55 65%,
+        #44ddaa 85%,
+        #aaffee 100%
+      );
+      box-shadow: 0 0 40px rgba(0, 200, 120, 0.25), 0 0 80px rgba(0, 200, 120, 0.1);
     }
-    .team-green .bar-glow { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
 
     /* ── Blue ── */
     .team-blue .bar-fill {
-      background: linear-gradient(to top, #000d30 0%, #2255cc 55%, #66aaff 100%);
-      box-shadow: 0 0 30px rgba(80, 140, 255, 0.3), inset 0 0 20px rgba(80, 140, 255, 0.1);
+      background: linear-gradient(to top,
+        #000a1f 0%,
+        #001566 30%,
+        #1155cc 65%,
+        #55aaff 85%,
+        #bbddff 100%
+      );
+      box-shadow: 0 0 40px rgba(60, 130, 255, 0.25), 0 0 80px rgba(60, 130, 255, 0.1);
     }
-    .team-blue .bar-glow { background: #4488ff; box-shadow: 0 0 20px #4488ff; }
+
+    /* ── Crown glow at top ── */
+    .bar-crown {
+      position: absolute;
+      top: -1px;
+      left: 15%;
+      right: 15%;
+      height: 3px;
+      border-radius: 50%;
+      filter: blur(4px);
+      animation: crownPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes crownPulse {
+      0%,100% { opacity: 0.5; transform: scaleX(0.8)  scaleY(1); }
+      50%     { opacity: 1;   transform: scaleX(1.15) scaleY(2); }
+    }
+
+    .team-red   .bar-crown { background: #ff88bb; box-shadow: 0 0 12px #ff3366, 0 0 24px #ff3366; }
+    .team-green .bar-crown { background: #88ffdd; box-shadow: 0 0 12px #00ffaa, 0 0 24px #00ffaa; }
+    .team-blue  .bar-crown { background: #aaddff; box-shadow: 0 0 12px #44aaff, 0 0 24px #44aaff; }
 
     /* ── Lap number ── */
     .lap-number {
       position: absolute;
       left: 50%;
       transform: translateX(-50%) translateY(50%);
-      font-size: clamp(2rem, 4.5vw, 5rem);
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      white-space: nowrap;
+      font-size: clamp(1.8rem, 4vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
       line-height: 1;
-      transition: bottom 0.85s cubic-bezier(0.34, 1.3, 0.64, 1);
+      white-space: nowrap;
+      transition: bottom 1s cubic-bezier(0.22, 1, 0.36, 1);
       pointer-events: none;
       bottom: 0;
     }
 
-    .team-red   .lap-number { color: #ff7070; text-shadow: 0 0 30px rgba(255,70,70,0.7); }
-    .team-green .lap-number { color: #70ffbb; text-shadow: 0 0 30px rgba(0,255,140,0.7); }
-    .team-blue  .lap-number { color: #88bbff; text-shadow: 0 0 30px rgba(80,150,255,0.7); }
+    .team-red   .lap-number { color: #ffaac8; text-shadow: 0 0 30px rgba(255,80,140,0.8),  0 0 60px rgba(255,80,140,0.3); }
+    .team-green .lap-number { color: #aaffdd; text-shadow: 0 0 30px rgba(0,255,180,0.8),   0 0 60px rgba(0,255,180,0.3); }
+    .team-blue  .lap-number { color: #bbddff; text-shadow: 0 0 30px rgba(80,180,255,0.8),  0 0 60px rgba(80,180,255,0.3); }
 
     /* ── Team label ── */
     .team-label {
       flex-shrink: 0;
-      margin-top: 12px;
-      font-size: clamp(0.65rem, 1.2vw, 1rem);
-      font-weight: 700;
-      letter-spacing: 0.25em;
+      margin-top: 14px;
+      font-size: clamp(0.6rem, 1vw, 0.9rem);
+      font-weight: 300;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      opacity: 0.45;
+      opacity: 0.35;
     }
 
-    .team-red   .team-label { color: #ff7070; }
-    .team-green .team-label { color: #70ffbb; }
-    .team-blue  .team-label { color: #88bbff; }
-
-    /* ── Connection status ── */
+    /* ── Status ── */
     #status {
       position: fixed;
-      top: 12px;
-      right: 16px;
-      font-size: 0.7rem;
+      top: 10px; right: 14px;
+      font-size: 0.65rem;
       letter-spacing: 0.1em;
       opacity: 0;
       transition: opacity 0.4s;
       z-index: 10;
     }
-
-    #status.visible { opacity: 0.5; }
-    #status.error   { opacity: 1; color: #ff4444; }
+    #status.visible { opacity: 0.4; }
+    #status.error   { opacity: 1; color: #ff5588; }
   </style>
 </head>
 <body>
 
-  <!-- Animated background -->
   <div class="bg">
-    <div class="blob blob-1" id="blob1"></div>
-    <div class="blob blob-2" id="blob2"></div>
-    <div class="blob blob-3" id="blob3"></div>
+    <div class="bg-base"></div>
+    <div class="stars"></div>
+    <div class="aurora-band band-1" id="band1"></div>
+    <div class="aurora-band band-2" id="band2"></div>
+    <div class="aurora-band band-3" id="band3"></div>
   </div>
 
-  <!-- Main layout -->
   <div class="layout">
     <div class="logo-area">
       <img
         src="hypernight.png"
         alt="HyperNight"
-        id="logo-img"
         onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"
       >
       <div class="logo-fallback" id="logo-text" style="display:none;">
@@ -317,33 +363,30 @@
 
     <div class="bars-area">
 
-      <!-- Red team -->
       <div class="team-col team-red">
         <div class="bar-track" id="track-red">
           <div class="bar-fill" id="bar-red">
-            <div class="bar-glow"></div>
+            <div class="bar-crown"></div>
           </div>
           <div class="lap-number" id="num-red">0</div>
         </div>
         <div class="team-label">Rouge</div>
       </div>
 
-      <!-- Green team -->
       <div class="team-col team-green">
         <div class="bar-track" id="track-green">
           <div class="bar-fill" id="bar-green">
-            <div class="bar-glow"></div>
+            <div class="bar-crown"></div>
           </div>
           <div class="lap-number" id="num-green">0</div>
         </div>
         <div class="team-label">Vert</div>
       </div>
 
-      <!-- Blue team -->
       <div class="team-col team-blue">
         <div class="bar-track" id="track-blue">
           <div class="bar-fill" id="bar-blue">
-            <div class="bar-glow"></div>
+            <div class="bar-crown"></div>
           </div>
           <div class="lap-number" id="num-blue">0</div>
         </div>
@@ -353,22 +396,39 @@
     </div>
   </div>
 
-  <div id="status">⚡ Connexion…</div>
+  <div id="status">● Live</div>
 
   <script>
-    const LEAD_COLORS = {
-      red:   { r: 220, g: 50,  b: 50  },
-      green: { r: 20,  g: 200, b: 100 },
-      blue:  { r: 60,  g: 110, b: 240 },
-      none:  { r: 80,  g: 80,  b: 120 },
+    // Aurora color palettes per leader
+    const AURORA = {
+      red: {
+        band1: 'linear-gradient(90deg, transparent, rgba(200,20,60,1), rgba(255,60,100,1), transparent)',
+        band2: 'linear-gradient(90deg, transparent, rgba(180,10,50,1), rgba(220,40,80,1), transparent)',
+        band3: 'linear-gradient(90deg, transparent, rgba(120,0,40,1), transparent)',
+      },
+      green: {
+        band1: 'linear-gradient(90deg, transparent, rgba(0,180,80,1), rgba(0,255,160,1), transparent)',
+        band2: 'linear-gradient(90deg, transparent, rgba(0,150,70,1), rgba(0,220,120,1), transparent)',
+        band3: 'linear-gradient(90deg, transparent, rgba(0,100,50,1), transparent)',
+      },
+      blue: {
+        band1: 'linear-gradient(90deg, transparent, rgba(30,80,200,1), rgba(80,160,255,1), transparent)',
+        band2: 'linear-gradient(90deg, transparent, rgba(20,60,180,1), rgba(60,130,255,1), transparent)',
+        band3: 'linear-gradient(90deg, transparent, rgba(10,40,120,1), transparent)',
+      },
+      none: {
+        band1: 'linear-gradient(90deg, transparent, rgba(60,60,120,1), rgba(80,80,180,1), transparent)',
+        band2: 'linear-gradient(90deg, transparent, rgba(40,40,100,1), transparent)',
+        band3: 'linear-gradient(90deg, transparent, rgba(30,30,80,1), transparent)',
+      },
     };
 
     let state = { red: 0, green: 0, blue: 0, max: 50 };
     let currentLeader = 'none';
 
-    const blob1 = document.getElementById('blob1');
-    const blob2 = document.getElementById('blob2');
-    const blob3 = document.getElementById('blob3');
+    const band1 = document.getElementById('band1');
+    const band2 = document.getElementById('band2');
+    const band3 = document.getElementById('band3');
     const statusEl = document.getElementById('status');
 
     function getLeader() {
@@ -380,33 +440,29 @@
       return 'blue';
     }
 
-    function updateBackground(leader) {
+    function updateAurora(leader) {
       if (leader === currentLeader) return;
       currentLeader = leader;
-      const c = LEAD_COLORS[leader];
-      const color = `rgb(${c.r}, ${c.g}, ${c.b})`;
-      blob1.style.background = color;
-      blob2.style.background = color;
-      blob3.style.background = color;
+      const palette = AURORA[leader];
+      band1.style.background = palette.band1;
+      band2.style.background = palette.band2;
+      band3.style.background = palette.band3;
     }
 
     function updateBars(newState) {
       state = newState;
-      const teams = ['red', 'green', 'blue'];
 
-      teams.forEach((team) => {
+      ['red', 'green', 'blue'].forEach((team) => {
         const pct = state.max > 0 ? (state[team] / state.max) * 100 : 0;
-        const bar = document.getElementById(`bar-${team}`);
+        document.getElementById(`bar-${team}`).style.height = pct + '%';
         const num = document.getElementById(`num-${team}`);
-        bar.style.height = pct + '%';
         num.textContent = state[team];
-        num.style.bottom = `calc(${pct}% + 14px)`;
+        num.style.bottom = `calc(${pct}% + 16px)`;
       });
 
-      updateBackground(getLeader());
+      updateAurora(getLeader());
     }
 
-    // WebSocket
     function connect() {
       const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
       const ws = new WebSocket(`${proto}//${location.host}`);
@@ -419,9 +475,7 @@
 
       ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
-        if (msg.type === 'init' || msg.type === 'update') {
-          updateBars(msg.state);
-        }
+        if (msg.type === 'init' || msg.type === 'update') updateBars(msg.state);
       };
 
       ws.onclose = () => {
@@ -431,6 +485,8 @@
       };
     }
 
+    // Init aurora to neutral on load
+    updateAurora('none');
     connect();
   </script>
 </body>

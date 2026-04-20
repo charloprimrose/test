@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HyperNight — Contrôle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       min-height: 100vh;
       min-height: 100dvh;
-      background: #05050d;
+      background: #02020f;
       font-family: 'Inter', system-ui, sans-serif;
       color: #fff;
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Background (same aesthetic, lighter) */
+    /* Aurora background (lighter) */
     .bg {
       position: fixed;
       inset: 0;
@@ -27,25 +27,34 @@
       overflow: hidden;
     }
 
-    .blob {
+    .bg-base {
       position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 120% 80% at 50% 120%, #08082a 0%, #02020f 70%);
+    }
+
+    .aurora-band {
+      position: absolute;
+      left: -30%;
+      width: 160%;
       border-radius: 50%;
-      filter: blur(100px);
+      filter: blur(60px);
       opacity: 0.07;
-      will-change: transform;
-      transition: background 4s ease;
+      mix-blend-mode: screen;
+      transition: background 5s ease;
     }
 
-    .blob-1 { width: 70vw; height: 70vw; top: -30%; left: -20%; animation: blobFloat1 14s ease-in-out infinite; }
-    .blob-2 { width: 50vw; height: 50vw; bottom: -20%; right: -10%; animation: blobFloat2 11s ease-in-out infinite; }
+    .band-1 { height: 40vh; top: 0; animation: auroraWave1 12s ease-in-out infinite; }
+    .band-2 { height: 30vh; top: 15%; animation: auroraWave2 16s ease-in-out infinite; }
 
-    @keyframes blobFloat1 {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50%     { transform: translate(5%,8%) scale(1.1); }
+    @keyframes auroraWave1 {
+      0%,100% { transform: translateX(0%) skewX(0deg); }
+      40%     { transform: translateX(6%) skewX(3deg); }
+      70%     { transform: translateX(-4%) skewX(-2deg); }
     }
-    @keyframes blobFloat2 {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50%     { transform: translate(-6%,-6%) scale(1.08); }
+    @keyframes auroraWave2 {
+      0%,100% { transform: translateX(0%); }
+      50%     { transform: translateX(-7%); }
     }
 
     /* Layout */
@@ -56,7 +65,7 @@
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding: 0 12px 20px;
+      padding: 0 10px 16px;
     }
 
     /* Header */
@@ -64,98 +73,118 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px 0 10px;
-      flex-shrink: 0;
+      padding: 14px 0 8px;
     }
 
     header img {
-      height: 44px;
+      height: 38px;
       object-fit: contain;
-      filter: drop-shadow(0 0 16px rgba(255,255,255,0.2));
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.15)) brightness(1.1);
     }
 
     .logo-fallback {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 900;
-      letter-spacing: 0.15em;
-      text-shadow: 0 0 30px rgba(255,255,255,0.2);
+      letter-spacing: 0.18em;
+      text-shadow: 0 0 30px rgba(160,180,255,0.3);
     }
 
-    .logo-fallback span { opacity: 0.4; }
+    .logo-fallback span { opacity: 0.3; font-weight: 300; }
 
     /* Teams grid */
     .teams {
       flex: 1;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 8px;
       align-items: stretch;
     }
 
     /* Team card */
     .card {
-      border-radius: 20px;
-      padding: 14px 10px;
+      border-radius: 24px;
+      padding: 12px 8px 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(10px);
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .card-red   { border-color: rgba(255, 60, 60, 0.25); background: rgba(255,40,40,0.05); }
-    .card-green { border-color: rgba(0, 220, 110, 0.25); background: rgba(0,200,80,0.04); }
-    .card-blue  { border-color: rgba(80, 140, 255, 0.25); background: rgba(60,120,255,0.05); }
+    /* Frosted glass cards */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    /* Team-colored bottom glow */
+    .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 10%; right: 10%;
+      height: 1px;
+      border-radius: 50%;
+      filter: blur(4px);
+      opacity: 0.6;
+    }
+
+    .card-red::after   { background: #ff5588; box-shadow: 0 0 20px 4px rgba(255,60,120,0.5); }
+    .card-green::after { background: #44ffbb; box-shadow: 0 0 20px 4px rgba(0,255,160,0.5); }
+    .card-blue::after  { background: #66aaff; box-shadow: 0 0 20px 4px rgba(80,160,255,0.5); }
 
     /* Team name */
     .team-name {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
+      position: relative;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      opacity: 0.5;
+      opacity: 0.4;
     }
-
-    .card-red   .team-name { color: #ff7070; }
-    .card-green .team-name { color: #70ffbb; }
-    .card-blue  .team-name { color: #88bbff; }
 
     /* Score */
     .score {
-      font-size: clamp(2.2rem, 8vw, 4rem);
+      position: relative;
+      font-size: clamp(2.4rem, 8.5vw, 4.5rem);
       font-weight: 900;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
       line-height: 1;
     }
 
-    .card-red   .score { color: #ff7070; text-shadow: 0 0 20px rgba(255,70,70,0.5); }
-    .card-green .score { color: #70ffbb; text-shadow: 0 0 20px rgba(0,255,140,0.5); }
-    .card-blue  .score { color: #88bbff; text-shadow: 0 0 20px rgba(80,150,255,0.5); }
+    .card-red   .score { color: #ffaac8; text-shadow: 0 0 24px rgba(255,80,140,0.6); }
+    .card-green .score { color: #aaffdd; text-shadow: 0 0 24px rgba(0,255,180,0.6); }
+    .card-blue  .score { color: #bbddff; text-shadow: 0 0 24px rgba(80,180,255,0.6); }
 
-    .score-max {
-      font-size: 0.65rem;
-      opacity: 0.3;
-      font-weight: 600;
+    .score-sub {
+      position: relative;
+      font-size: 0.6rem;
+      font-weight: 300;
+      opacity: 0.25;
+      letter-spacing: 0.05em;
       margin-top: -4px;
     }
 
     /* +1 button */
     .btn-plus {
+      position: relative;
       width: 100%;
       aspect-ratio: 1;
       border: none;
-      border-radius: 16px;
-      font-size: clamp(2rem, 7vw, 3.5rem);
+      border-radius: 20px;
+      font-size: clamp(2.2rem, 8vw, 4rem);
       font-weight: 900;
       cursor: pointer;
-      transition: transform 0.1s, opacity 0.1s;
       display: flex;
       align-items: center;
       justify-content: center;
-      line-height: 1;
-      position: relative;
+      transition: transform 0.12s, filter 0.12s;
+      -webkit-tap-highlight-color: transparent;
       overflow: hidden;
     }
 
@@ -163,82 +192,92 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.12);
       opacity: 0;
-      transition: opacity 0.15s;
+      transition: opacity 0.1s;
     }
 
-    .btn-plus:active { transform: scale(0.94); }
+    .btn-plus:active { transform: scale(0.93); filter: brightness(1.2); }
     .btn-plus:active::after { opacity: 1; }
 
-    .card-red   .btn-plus { background: linear-gradient(135deg, #8b0000, #cc2222, #ff5555); box-shadow: 0 4px 24px rgba(255,60,60,0.4); }
-    .card-green .btn-plus { background: linear-gradient(135deg, #003d1a, #009944, #00ff88); box-shadow: 0 4px 24px rgba(0,220,110,0.4); }
-    .card-blue  .btn-plus { background: linear-gradient(135deg, #001040, #1144aa, #4488ff); box-shadow: 0 4px 24px rgba(80,140,255,0.4); }
+    .card-red   .btn-plus {
+      background: linear-gradient(135deg, #5a001a, #bb1144, #ff4488);
+      box-shadow: 0 6px 28px rgba(255,40,120,0.35), 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .card-green .btn-plus {
+      background: linear-gradient(135deg, #002a14, #008844, #00dd88);
+      box-shadow: 0 6px 28px rgba(0,210,130,0.35), 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .card-blue  .btn-plus {
+      background: linear-gradient(135deg, #000d35, #1144bb, #4499ff);
+      box-shadow: 0 6px 28px rgba(60,140,255,0.35), 0 2px 8px rgba(0,0,0,0.4);
+    }
 
     /* -1 button */
     .btn-minus {
+      position: relative;
       width: 100%;
-      padding: 10px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.4);
-      font-size: 1.4rem;
-      font-weight: 700;
+      padding: 9px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.35);
+      font-size: 1.3rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
       cursor: pointer;
-      transition: transform 0.1s, background 0.15s;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.12s, transform 0.12s;
     }
 
     .btn-minus:active {
       transform: scale(0.96);
-      background: rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
     }
 
-    /* Footer controls */
+    /* Footer */
     .footer {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 14px;
-      gap: 10px;
+      gap: 8px;
+      padding-top: 10px;
     }
 
     .btn-reset {
       flex: 1;
-      padding: 12px;
-      border: 1px solid rgba(255, 60, 60, 0.3);
-      border-radius: 12px;
-      background: rgba(255, 40, 40, 0.07);
-      color: rgba(255, 100, 100, 0.6);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      padding: 11px;
+      border: 1px solid rgba(255,80,120,0.25);
+      border-radius: 14px;
+      background: rgba(255,40,80,0.05);
+      color: rgba(255,100,140,0.5);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      transition: background 0.15s;
     }
 
-    .btn-reset:active { background: rgba(255,40,40,0.18); color: #ff6060; }
+    .btn-reset:active { background: rgba(255,40,80,0.15); color: rgba(255,100,140,0.9); }
 
     .max-control {
       flex: 2;
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 8px 14px;
     }
 
     .max-control label {
-      font-size: 0.7rem;
-      opacity: 0.4;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-size: 0.65rem;
+      opacity: 0.3;
+      font-weight: 300;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -256,33 +295,31 @@
       text-align: center;
     }
 
-    /* Connection status */
+    /* Status */
     #status {
       position: fixed;
-      top: 8px;
-      right: 12px;
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
+      top: 8px; right: 12px;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
       opacity: 0;
       transition: opacity 0.4s;
       z-index: 10;
     }
+    #status.visible { opacity: 0.4; }
+    #status.error   { opacity: 1; color: #ff5588; }
 
-    #status.visible { opacity: 0.5; }
-    #status.error   { opacity: 1; color: #ff4444; }
-
-    /* Toast feedback */
+    /* Toast */
     .toast {
       position: fixed;
-      bottom: 80px;
+      bottom: 90px;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 10px;
-      padding: 8px 20px;
-      font-size: 0.8rem;
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 8px 22px;
+      font-size: 0.78rem;
       font-weight: 600;
       opacity: 0;
       transition: opacity 0.2s, transform 0.2s;
@@ -290,17 +327,15 @@
       z-index: 20;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
   <div class="bg">
-    <div class="blob blob-1" id="blob1"></div>
-    <div class="blob blob-2" id="blob2"></div>
+    <div class="bg-base"></div>
+    <div class="aurora-band band-1" id="band1"></div>
+    <div class="aurora-band band-2" id="band2"></div>
   </div>
 
   <div class="layout">
@@ -308,7 +343,6 @@
       <img
         src="hypernight.png"
         alt="HyperNight"
-        id="logo-img"
         onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"
       >
       <div class="logo-fallback" id="logo-text" style="display:none;">
@@ -318,37 +352,34 @@
 
     <div class="teams">
 
-      <!-- RED -->
       <div class="card card-red">
         <div class="team-name">Rouge</div>
         <div class="score" id="score-red">0</div>
-        <div class="score-max" id="max-red">/ 50</div>
-        <button class="btn-plus" id="plus-red" aria-label="Ajouter tour Rouge">+</button>
-        <button class="btn-minus" id="minus-red" aria-label="Retirer tour Rouge">−1</button>
+        <div class="score-sub" id="max-red">/ 50</div>
+        <button class="btn-plus" id="plus-red">+</button>
+        <button class="btn-minus" id="minus-red">− 1</button>
       </div>
 
-      <!-- GREEN -->
       <div class="card card-green">
         <div class="team-name">Vert</div>
         <div class="score" id="score-green">0</div>
-        <div class="score-max" id="max-green">/ 50</div>
-        <button class="btn-plus" id="plus-green" aria-label="Ajouter tour Vert">+</button>
-        <button class="btn-minus" id="minus-green" aria-label="Retirer tour Vert">−1</button>
+        <div class="score-sub" id="max-green">/ 50</div>
+        <button class="btn-plus" id="plus-green">+</button>
+        <button class="btn-minus" id="minus-green">− 1</button>
       </div>
 
-      <!-- BLUE -->
       <div class="card card-blue">
         <div class="team-name">Bleu</div>
         <div class="score" id="score-blue">0</div>
-        <div class="score-max" id="max-blue">/ 50</div>
-        <button class="btn-plus" id="plus-blue" aria-label="Ajouter tour Bleu">+</button>
-        <button class="btn-minus" id="minus-blue" aria-label="Retirer tour Bleu">−1</button>
+        <div class="score-sub" id="max-blue">/ 50</div>
+        <button class="btn-plus" id="plus-blue">+</button>
+        <button class="btn-minus" id="minus-blue">− 1</button>
       </div>
 
     </div>
 
     <div class="footer">
-      <button class="btn-reset" id="btn-reset">Réinitialiser</button>
+      <button class="btn-reset" id="btn-reset">Reset</button>
       <div class="max-control">
         <label>Limite</label>
         <input type="number" id="input-max" value="50" min="1" max="999">
@@ -356,24 +387,25 @@
     </div>
   </div>
 
-  <div id="status">⚡ Connexion…</div>
+  <div id="status">● Live</div>
   <div class="toast" id="toast"></div>
 
   <script>
-    const LEAD_COLORS = {
-      red:   'rgb(220, 50, 50)',
-      green: 'rgb(20, 200, 100)',
-      blue:  'rgb(60, 110, 240)',
-      none:  'rgb(80, 80, 120)',
+    const AURORA = {
+      red:   { b1: 'linear-gradient(90deg,transparent,rgba(200,20,60,1),rgba(255,60,100,1),transparent)', b2: 'linear-gradient(90deg,transparent,rgba(180,10,50,1),transparent)' },
+      green: { b1: 'linear-gradient(90deg,transparent,rgba(0,180,80,1),rgba(0,255,160,1),transparent)',   b2: 'linear-gradient(90deg,transparent,rgba(0,150,70,1),transparent)' },
+      blue:  { b1: 'linear-gradient(90deg,transparent,rgba(30,80,200,1),rgba(80,160,255,1),transparent)', b2: 'linear-gradient(90deg,transparent,rgba(20,60,180,1),transparent)' },
+      none:  { b1: 'linear-gradient(90deg,transparent,rgba(60,60,120,1),rgba(80,80,180,1),transparent)',  b2: 'linear-gradient(90deg,transparent,rgba(40,40,100,1),transparent)' },
     };
 
     let state = { red: 0, green: 0, blue: 0, max: 50 };
     let ws = null;
-    let toastTimeout = null;
+    let toastTimer = null;
+    let currentLeader = 'none';
 
+    const band1 = document.getElementById('band1');
+    const band2 = document.getElementById('band2');
     const statusEl = document.getElementById('status');
-    const blob1 = document.getElementById('blob1');
-    const blob2 = document.getElementById('blob2');
 
     function getLeader() {
       const { red, green, blue } = state;
@@ -384,45 +416,40 @@
       return 'blue';
     }
 
+    function updateAurora(leader) {
+      if (leader === currentLeader) return;
+      currentLeader = leader;
+      band1.style.background = AURORA[leader].b1;
+      band2.style.background = AURORA[leader].b2;
+    }
+
     function renderState(newState) {
       state = newState;
       document.getElementById('input-max').value = state.max;
-
-      ['red', 'green', 'blue'].forEach((team) => {
-        document.getElementById(`score-${team}`).textContent = state[team];
-        document.getElementById(`max-${team}`).textContent = `/ ${state.max}`;
+      ['red', 'green', 'blue'].forEach((t) => {
+        document.getElementById(`score-${t}`).textContent = state[t];
+        document.getElementById(`max-${t}`).textContent = `/ ${state.max}`;
       });
-
-      const leader = getLeader();
-      const color = LEAD_COLORS[leader];
-      blob1.style.background = color;
-      blob2.style.background = color;
+      updateAurora(getLeader());
     }
 
     function send(msg) {
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify(msg));
-      }
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(msg));
     }
 
     function showToast(msg) {
       const el = document.getElementById('toast');
       el.textContent = msg;
       el.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => el.classList.remove('show'), 1200);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 1200);
     }
 
-    // Button handlers
     ['red', 'green', 'blue'].forEach((team) => {
       document.getElementById(`plus-${team}`).addEventListener('click', () => {
-        if (state[team] >= state.max) {
-          showToast('Limite atteinte !');
-          return;
-        }
+        if (state[team] >= state.max) { showToast('Limite atteinte !'); return; }
         send({ type: 'lap', team, delta: 1 });
       });
-
       document.getElementById(`minus-${team}`).addEventListener('click', () => {
         if (state[team] <= 0) return;
         send({ type: 'lap', team, delta: -1 });
@@ -430,9 +457,7 @@
     });
 
     document.getElementById('btn-reset').addEventListener('click', () => {
-      if (confirm('Réinitialiser tous les compteurs ?')) {
-        send({ type: 'reset' });
-      }
+      if (confirm('Réinitialiser tous les compteurs ?')) send({ type: 'reset' });
     });
 
     document.getElementById('input-max').addEventListener('change', (e) => {
@@ -440,24 +465,18 @@
       if (val > 0) send({ type: 'setMax', max: val });
     });
 
-    // WebSocket
     function connect() {
       const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
       ws = new WebSocket(`${proto}//${location.host}`);
-
       ws.onopen = () => {
         statusEl.textContent = '● Live';
         statusEl.className = 'visible';
         setTimeout(() => { statusEl.className = ''; }, 2000);
       };
-
       ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
-        if (msg.type === 'init' || msg.type === 'update') {
-          renderState(msg.state);
-        }
+        if (msg.type === 'init' || msg.type === 'update') renderState(msg.state);
       };
-
       ws.onclose = () => {
         statusEl.textContent = '⚠ Reconnexion…';
         statusEl.className = 'error visible';
@@ -465,6 +484,7 @@
       };
     }
 
+    updateAurora('none');
     connect();
   </script>
 </body>
