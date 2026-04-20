@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyperNight — Live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --lead-r: 100;
+      --lead-g: 100;
+      --lead-b: 140;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #05050d;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #fff;
+      user-select: none;
+    }
+
+    /* ── Liquid gradient background ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      will-change: transform;
+      /* color set via inline style updated by JS */
+      transition: background 4s ease;
+    }
+
+    .blob-1 {
+      width: 70vw; height: 70vw;
+      top: -25%; left: -15%;
+      opacity: 0.13;
+      animation: blobFloat1 14s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 55vw; height: 55vw;
+      bottom: -20%; right: -10%;
+      opacity: 0.09;
+      animation: blobFloat2 11s ease-in-out infinite;
+    }
+
+    .blob-3 {
+      width: 40vw; height: 40vw;
+      top: 40%; left: 30%;
+      opacity: 0.06;
+      animation: blobFloat3 17s ease-in-out infinite;
+    }
+
+    @keyframes blobFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      30%       { transform: translate(4%, 9%) scale(1.08); }
+      65%       { transform: translate(-3%, 5%) scale(0.96); }
+    }
+    @keyframes blobFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%       { transform: translate(-6%, -7%) scale(1.06); }
+      70%       { transform: translate(5%, -4%) scale(1.12); }
+    }
+    @keyframes blobFloat3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%       { transform: translate(8%, -10%) scale(1.15); }
+    }
+
+    /* ── Layout ── */
+    .layout {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Logo ── */
+    .logo-area {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2.5vh 0 1vh;
+      height: 20vh;
+    }
+
+    .logo-area img {
+      max-height: 100%;
+      max-width: 45vw;
+      object-fit: contain;
+      filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.18));
+    }
+
+    .logo-fallback {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow:
+        0 0 60px rgba(255, 255, 255, 0.25),
+        0 0 120px rgba(255, 255, 255, 0.1);
+    }
+
+    .logo-fallback span { opacity: 0.45; }
+
+    /* ── Bars zone ── */
+    .bars-area {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: clamp(2rem, 6vw, 8rem);
+      padding: 0 8vw 4vh;
+      min-height: 0;
+    }
+
+    /* ── Team column ── */
+    .team-col {
+      flex: 1;
+      max-width: 26vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      position: relative;
+      justify-content: flex-end;
+    }
+
+    /* ── Bar track (ghost rail) ── */
+    .bar-track {
+      width: 100%;
+      flex: 1;
+      position: relative;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: visible;
+    }
+
+    /* ── Bar fill ── */
+    .bar-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      min-height: 0;
+      border-radius: 10px 10px 6px 6px;
+      transition: height 0.85s cubic-bezier(0.34, 1.3, 0.64, 1);
+      overflow: hidden;
+      animation: barBreathe 4s ease-in-out infinite;
+    }
+
+    @keyframes barBreathe {
+      0%, 100% { border-radius: 10px 10px 6px 6px; transform: scaleX(1); }
+      35%       { border-radius: 14px 8px  6px 6px; transform: scaleX(1.02); }
+      70%       { border-radius: 8px  14px 6px 6px; transform: scaleX(0.99); }
+    }
+
+    /* shimmer stripe going upward */
+    .bar-fill::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        transparent 0%,
+        rgba(255, 255, 255, 0.07) 40%,
+        rgba(255, 255, 255, 0.14) 55%,
+        transparent 75%
+      );
+      background-size: 100% 200%;
+      animation: shimmerUp 2.5s ease-in-out infinite;
+    }
+
+    @keyframes shimmerUp {
+      0%   { background-position: 0% 100%; }
+      100% { background-position: 0% -100%; }
+    }
+
+    /* light sheen at top */
+    .bar-fill::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 40%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    /* ── Glow crown at the top of the fill ── */
+    .bar-glow {
+      position: absolute;
+      top: -6px;
+      left: 8%;
+      right: 8%;
+      height: 12px;
+      border-radius: 50%;
+      filter: blur(8px);
+      animation: glowPulse 1.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.65; transform: scaleX(0.85); }
+      50%       { opacity: 1;    transform: scaleX(1.15); }
+    }
+
+    /* ── Red ── */
+    .team-red .bar-fill {
+      background: linear-gradient(to top, #4a0000 0%, #cc1111 55%, #ff5555 100%);
+      box-shadow: 0 0 30px rgba(255, 60, 60, 0.3), inset 0 0 20px rgba(255, 60, 60, 0.1);
+    }
+    .team-red .bar-glow { background: #ff4040; box-shadow: 0 0 20px #ff4040; }
+
+    /* ── Green ── */
+    .team-green .bar-fill {
+      background: linear-gradient(to top, #002218 0%, #00aa55 55%, #00ff99 100%);
+      box-shadow: 0 0 30px rgba(0, 220, 110, 0.3), inset 0 0 20px rgba(0, 220, 110, 0.1);
+    }
+    .team-green .bar-glow { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+
+    /* ── Blue ── */
+    .team-blue .bar-fill {
+      background: linear-gradient(to top, #000d30 0%, #2255cc 55%, #66aaff 100%);
+      box-shadow: 0 0 30px rgba(80, 140, 255, 0.3), inset 0 0 20px rgba(80, 140, 255, 0.1);
+    }
+    .team-blue .bar-glow { background: #4488ff; box-shadow: 0 0 20px #4488ff; }
+
+    /* ── Lap number ── */
+    .lap-number {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(50%);
+      font-size: clamp(2rem, 4.5vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+      line-height: 1;
+      transition: bottom 0.85s cubic-bezier(0.34, 1.3, 0.64, 1);
+      pointer-events: none;
+      bottom: 0;
+    }
+
+    .team-red   .lap-number { color: #ff7070; text-shadow: 0 0 30px rgba(255,70,70,0.7); }
+    .team-green .lap-number { color: #70ffbb; text-shadow: 0 0 30px rgba(0,255,140,0.7); }
+    .team-blue  .lap-number { color: #88bbff; text-shadow: 0 0 30px rgba(80,150,255,0.7); }
+
+    /* ── Team label ── */
+    .team-label {
+      flex-shrink: 0;
+      margin-top: 12px;
+      font-size: clamp(0.65rem, 1.2vw, 1rem);
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+
+    .team-red   .team-label { color: #ff7070; }
+    .team-green .team-label { color: #70ffbb; }
+    .team-blue  .team-label { color: #88bbff; }
+
+    /* ── Connection status ── */
+    #status {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transition: opacity 0.4s;
+      z-index: 10;
+    }
+
+    #status.visible { opacity: 0.5; }
+    #status.error   { opacity: 1; color: #ff4444; }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="bg">
+    <div class="blob blob-1" id="blob1"></div>
+    <div class="blob blob-2" id="blob2"></div>
+    <div class="blob blob-3" id="blob3"></div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="layout">
+    <div class="logo-area">
+      <img
+        src="hypernight.png"
+        alt="HyperNight"
+        id="logo-img"
+        onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"
+      >
+      <div class="logo-fallback" id="logo-text" style="display:none;">
+        HYPER<span>NIGHT</span>
+      </div>
+    </div>
+
+    <div class="bars-area">
+
+      <!-- Red team -->
+      <div class="team-col team-red">
+        <div class="bar-track" id="track-red">
+          <div class="bar-fill" id="bar-red">
+            <div class="bar-glow"></div>
+          </div>
+          <div class="lap-number" id="num-red">0</div>
+        </div>
+        <div class="team-label">Rouge</div>
+      </div>
+
+      <!-- Green team -->
+      <div class="team-col team-green">
+        <div class="bar-track" id="track-green">
+          <div class="bar-fill" id="bar-green">
+            <div class="bar-glow"></div>
+          </div>
+          <div class="lap-number" id="num-green">0</div>
+        </div>
+        <div class="team-label">Vert</div>
+      </div>
+
+      <!-- Blue team -->
+      <div class="team-col team-blue">
+        <div class="bar-track" id="track-blue">
+          <div class="bar-fill" id="bar-blue">
+            <div class="bar-glow"></div>
+          </div>
+          <div class="lap-number" id="num-blue">0</div>
+        </div>
+        <div class="team-label">Bleu</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="status">⚡ Connexion…</div>
+
+  <script>
+    const LEAD_COLORS = {
+      red:   { r: 220, g: 50,  b: 50  },
+      green: { r: 20,  g: 200, b: 100 },
+      blue:  { r: 60,  g: 110, b: 240 },
+      none:  { r: 80,  g: 80,  b: 120 },
+    };
+
+    let state = { red: 0, green: 0, blue: 0, max: 50 };
+    let currentLeader = 'none';
+
+    const blob1 = document.getElementById('blob1');
+    const blob2 = document.getElementById('blob2');
+    const blob3 = document.getElementById('blob3');
+    const statusEl = document.getElementById('status');
+
+    function getLeader() {
+      const { red, green, blue } = state;
+      const max = Math.max(red, green, blue);
+      if (max === 0) return 'none';
+      if (red === max) return 'red';
+      if (green === max) return 'green';
+      return 'blue';
+    }
+
+    function updateBackground(leader) {
+      if (leader === currentLeader) return;
+      currentLeader = leader;
+      const c = LEAD_COLORS[leader];
+      const color = `rgb(${c.r}, ${c.g}, ${c.b})`;
+      blob1.style.background = color;
+      blob2.style.background = color;
+      blob3.style.background = color;
+    }
+
+    function updateBars(newState) {
+      state = newState;
+      const teams = ['red', 'green', 'blue'];
+
+      teams.forEach((team) => {
+        const pct = state.max > 0 ? (state[team] / state.max) * 100 : 0;
+        const bar = document.getElementById(`bar-${team}`);
+        const num = document.getElementById(`num-${team}`);
+        bar.style.height = pct + '%';
+        num.textContent = state[team];
+        num.style.bottom = `calc(${pct}% + 14px)`;
+      });
+
+      updateBackground(getLeader());
+    }
+
+    // WebSocket
+    function connect() {
+      const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(`${proto}//${location.host}`);
+
+      ws.onopen = () => {
+        statusEl.textContent = '● Live';
+        statusEl.className = 'visible';
+        setTimeout(() => { statusEl.className = ''; }, 2000);
+      };
+
+      ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'init' || msg.type === 'update') {
+          updateBars(msg.state);
+        }
+      };
+
+      ws.onclose = () => {
+        statusEl.textContent = '⚠ Reconnexion…';
+        statusEl.className = 'error visible';
+        setTimeout(connect, 3000);
+      };
+    }
+
+    connect();
+  </script>
+</body>
+</html>

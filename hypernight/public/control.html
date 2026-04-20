@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HyperNight — Contrôle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: #05050d;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Background (same aesthetic, lighter) */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.07;
+      will-change: transform;
+      transition: background 4s ease;
+    }
+
+    .blob-1 { width: 70vw; height: 70vw; top: -30%; left: -20%; animation: blobFloat1 14s ease-in-out infinite; }
+    .blob-2 { width: 50vw; height: 50vw; bottom: -20%; right: -10%; animation: blobFloat2 11s ease-in-out infinite; }
+
+    @keyframes blobFloat1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(5%,8%) scale(1.1); }
+    }
+    @keyframes blobFloat2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(-6%,-6%) scale(1.08); }
+    }
+
+    /* Layout */
+    .layout {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 12px 20px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 0 10px;
+      flex-shrink: 0;
+    }
+
+    header img {
+      height: 44px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 16px rgba(255,255,255,0.2));
+    }
+
+    .logo-fallback {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 30px rgba(255,255,255,0.2);
+    }
+
+    .logo-fallback span { opacity: 0.4; }
+
+    /* Teams grid */
+    .teams {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    /* Team card */
+    .card {
+      border-radius: 20px;
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+    }
+
+    .card-red   { border-color: rgba(255, 60, 60, 0.25); background: rgba(255,40,40,0.05); }
+    .card-green { border-color: rgba(0, 220, 110, 0.25); background: rgba(0,200,80,0.04); }
+    .card-blue  { border-color: rgba(80, 140, 255, 0.25); background: rgba(60,120,255,0.05); }
+
+    /* Team name */
+    .team-name {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    .card-red   .team-name { color: #ff7070; }
+    .card-green .team-name { color: #70ffbb; }
+    .card-blue  .team-name { color: #88bbff; }
+
+    /* Score */
+    .score {
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .card-red   .score { color: #ff7070; text-shadow: 0 0 20px rgba(255,70,70,0.5); }
+    .card-green .score { color: #70ffbb; text-shadow: 0 0 20px rgba(0,255,140,0.5); }
+    .card-blue  .score { color: #88bbff; text-shadow: 0 0 20px rgba(80,150,255,0.5); }
+
+    .score-max {
+      font-size: 0.65rem;
+      opacity: 0.3;
+      font-weight: 600;
+      margin-top: -4px;
+    }
+
+    /* +1 button */
+    .btn-plus {
+      width: 100%;
+      aspect-ratio: 1;
+      border: none;
+      border-radius: 16px;
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-plus::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .btn-plus:active { transform: scale(0.94); }
+    .btn-plus:active::after { opacity: 1; }
+
+    .card-red   .btn-plus { background: linear-gradient(135deg, #8b0000, #cc2222, #ff5555); box-shadow: 0 4px 24px rgba(255,60,60,0.4); }
+    .card-green .btn-plus { background: linear-gradient(135deg, #003d1a, #009944, #00ff88); box-shadow: 0 4px 24px rgba(0,220,110,0.4); }
+    .card-blue  .btn-plus { background: linear-gradient(135deg, #001040, #1144aa, #4488ff); box-shadow: 0 4px 24px rgba(80,140,255,0.4); }
+
+    /* -1 button */
+    .btn-minus {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.4);
+      font-size: 1.4rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-minus:active {
+      transform: scale(0.96);
+      background: rgba(255,255,255,0.09);
+    }
+
+    /* Footer controls */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      gap: 10px;
+    }
+
+    .btn-reset {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid rgba(255, 60, 60, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 40, 40, 0.07);
+      color: rgba(255, 100, 100, 0.6);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-reset:active { background: rgba(255,40,40,0.18); color: #ff6060; }
+
+    .max-control {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 8px 12px;
+    }
+
+    .max-control label {
+      font-size: 0.7rem;
+      opacity: 0.4;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .max-control input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    /* Connection status */
+    #status {
+      position: fixed;
+      top: 8px;
+      right: 12px;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      transition: opacity 0.4s;
+      z-index: 10;
+    }
+
+    #status.visible { opacity: 0.5; }
+    #status.error   { opacity: 1; color: #ff4444; }
+
+    /* Toast feedback */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg">
+    <div class="blob blob-1" id="blob1"></div>
+    <div class="blob blob-2" id="blob2"></div>
+  </div>
+
+  <div class="layout">
+    <header>
+      <img
+        src="hypernight.png"
+        alt="HyperNight"
+        id="logo-img"
+        onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"
+      >
+      <div class="logo-fallback" id="logo-text" style="display:none;">
+        HYPER<span>NIGHT</span>
+      </div>
+    </header>
+
+    <div class="teams">
+
+      <!-- RED -->
+      <div class="card card-red">
+        <div class="team-name">Rouge</div>
+        <div class="score" id="score-red">0</div>
+        <div class="score-max" id="max-red">/ 50</div>
+        <button class="btn-plus" id="plus-red" aria-label="Ajouter tour Rouge">+</button>
+        <button class="btn-minus" id="minus-red" aria-label="Retirer tour Rouge">−1</button>
+      </div>
+
+      <!-- GREEN -->
+      <div class="card card-green">
+        <div class="team-name">Vert</div>
+        <div class="score" id="score-green">0</div>
+        <div class="score-max" id="max-green">/ 50</div>
+        <button class="btn-plus" id="plus-green" aria-label="Ajouter tour Vert">+</button>
+        <button class="btn-minus" id="minus-green" aria-label="Retirer tour Vert">−1</button>
+      </div>
+
+      <!-- BLUE -->
+      <div class="card card-blue">
+        <div class="team-name">Bleu</div>
+        <div class="score" id="score-blue">0</div>
+        <div class="score-max" id="max-blue">/ 50</div>
+        <button class="btn-plus" id="plus-blue" aria-label="Ajouter tour Bleu">+</button>
+        <button class="btn-minus" id="minus-blue" aria-label="Retirer tour Bleu">−1</button>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <button class="btn-reset" id="btn-reset">Réinitialiser</button>
+      <div class="max-control">
+        <label>Limite</label>
+        <input type="number" id="input-max" value="50" min="1" max="999">
+      </div>
+    </div>
+  </div>
+
+  <div id="status">⚡ Connexion…</div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const LEAD_COLORS = {
+      red:   'rgb(220, 50, 50)',
+      green: 'rgb(20, 200, 100)',
+      blue:  'rgb(60, 110, 240)',
+      none:  'rgb(80, 80, 120)',
+    };
+
+    let state = { red: 0, green: 0, blue: 0, max: 50 };
+    let ws = null;
+    let toastTimeout = null;
+
+    const statusEl = document.getElementById('status');
+    const blob1 = document.getElementById('blob1');
+    const blob2 = document.getElementById('blob2');
+
+    function getLeader() {
+      const { red, green, blue } = state;
+      const max = Math.max(red, green, blue);
+      if (max === 0) return 'none';
+      if (red === max) return 'red';
+      if (green === max) return 'green';
+      return 'blue';
+    }
+
+    function renderState(newState) {
+      state = newState;
+      document.getElementById('input-max').value = state.max;
+
+      ['red', 'green', 'blue'].forEach((team) => {
+        document.getElementById(`score-${team}`).textContent = state[team];
+        document.getElementById(`max-${team}`).textContent = `/ ${state.max}`;
+      });
+
+      const leader = getLeader();
+      const color = LEAD_COLORS[leader];
+      blob1.style.background = color;
+      blob2.style.background = color;
+    }
+
+    function send(msg) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(msg));
+      }
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => el.classList.remove('show'), 1200);
+    }
+
+    // Button handlers
+    ['red', 'green', 'blue'].forEach((team) => {
+      document.getElementById(`plus-${team}`).addEventListener('click', () => {
+        if (state[team] >= state.max) {
+          showToast('Limite atteinte !');
+          return;
+        }
+        send({ type: 'lap', team, delta: 1 });
+      });
+
+      document.getElementById(`minus-${team}`).addEventListener('click', () => {
+        if (state[team] <= 0) return;
+        send({ type: 'lap', team, delta: -1 });
+      });
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (confirm('Réinitialiser tous les compteurs ?')) {
+        send({ type: 'reset' });
+      }
+    });
+
+    document.getElementById('input-max').addEventListener('change', (e) => {
+      const val = parseInt(e.target.value);
+      if (val > 0) send({ type: 'setMax', max: val });
+    });
+
+    // WebSocket
+    function connect() {
+      const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${proto}//${location.host}`);
+
+      ws.onopen = () => {
+        statusEl.textContent = '● Live';
+        statusEl.className = 'visible';
+        setTimeout(() => { statusEl.className = ''; }, 2000);
+      };
+
+      ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'init' || msg.type === 'update') {
+          renderState(msg.state);
+        }
+      };
+
+      ws.onclose = () => {
+        statusEl.textContent = '⚠ Reconnexion…';
+        statusEl.className = 'error visible';
+        setTimeout(connect, 3000);
+      };
+    }
+
+    connect();
+  </script>
+</body>
+</html>
