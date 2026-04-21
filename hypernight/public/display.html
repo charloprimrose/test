@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HyperNight — Live</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,700;0,900;1,700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -13,109 +13,11 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      background: #02020f;
+      background: #d6d6de;
       font-family: 'Inter', system-ui, sans-serif;
-      color: #fff;
-    }
-
-    /* ── Aurora background ── */
-    .bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    /* Deep space base gradient */
-    .bg-base {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 120% 80% at 50% 120%, #0a0a2e 0%, #02020f 70%);
-    }
-
-    /* Aurora bands */
-    .aurora-band {
-      position: absolute;
-      left: -30%;
-      width: 160%;
-      border-radius: 50%;
-      filter: blur(50px);
-      opacity: 0;
-      mix-blend-mode: screen;
-      transition: background 5s ease, opacity 5s ease;
-    }
-
-    .band-1 {
-      height: 35vh;
-      top: 8%;
-      opacity: 0.18;
-      animation: auroraWave1 12s ease-in-out infinite;
-    }
-
-    .band-2 {
-      height: 28vh;
-      top: 20%;
-      opacity: 0.12;
-      animation: auroraWave2 16s ease-in-out infinite;
-    }
-
-    .band-3 {
-      height: 20vh;
-      top: 35%;
-      opacity: 0.08;
-      animation: auroraWave3 10s ease-in-out infinite;
-    }
-
-    /* Star field */
-    .stars {
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 15% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 72% 18%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 40% 5%,  rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 28% 22%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 12%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 8%,  rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 5%  40%, rgba(255,255,255,0.2) 0%, transparent 100%),
-        radial-gradient(2px 2px at 50% 3%,  rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 33% 35%, rgba(255,255,255,0.3) 0%, transparent 100%);
-      animation: twinkle 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes twinkle {
-      0%   { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes auroraWave1 {
-      0%,100% { transform: translateX(0%) scaleY(1)   skewX(0deg); }
-      25%     { transform: translateX(6%) scaleY(1.2) skewX(2deg); }
-      50%     { transform: translateX(-4%) scaleY(0.8) skewX(-3deg); }
-      75%     { transform: translateX(8%) scaleY(1.1) skewX(1deg); }
-    }
-
-    @keyframes auroraWave2 {
-      0%,100% { transform: translateX(0%)  scaleY(1)   skewX(0deg); }
-      30%     { transform: translateX(-8%) scaleY(1.3) skewX(-2deg); }
-      60%     { transform: translateX(5%)  scaleY(0.9) skewX(4deg); }
-    }
-
-    @keyframes auroraWave3 {
-      0%,100% { transform: translateX(0%) scaleY(1); }
-      40%     { transform: translateX(10%) scaleY(1.4); }
-      80%     { transform: translateX(-6%) scaleY(0.7); }
-    }
-
-    /* ── Layout ── */
-    .layout {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
 
     /* ── Logo ── */
@@ -125,342 +27,313 @@
       justify-content: center;
       align-items: center;
       padding: 3vh 0 1.5vh;
-      height: 20vh;
+      height: 16vh;
     }
 
     .logo-area img {
       max-height: 100%;
-      max-width: 45vw;
+      max-width: 40vw;
       object-fit: contain;
-      filter: drop-shadow(0 0 50px rgba(255,255,255,0.15)) brightness(1.1);
+      /* Invert white logo for light background */
+      filter: invert(1) brightness(0.15);
     }
 
     .logo-fallback {
-      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-size: clamp(2rem, 5vw, 4.5rem);
       font-weight: 900;
       letter-spacing: 0.14em;
-      color: #fff;
-      text-shadow:
-        0 0 80px rgba(255,255,255,0.2),
-        0 0 160px rgba(160,180,255,0.1);
+      color: #111;
     }
 
-    .logo-fallback span { opacity: 0.35; font-weight: 300; }
+    .logo-fallback span { opacity: 0.25; font-weight: 300; }
 
-    /* ── Bars area ── */
-    .bars-area {
+    /* ── Cards row ── */
+    .cards {
       flex: 1;
+      width: 100%;
       display: flex;
-      align-items: flex-end;
+      align-items: stretch;
       justify-content: center;
-      gap: clamp(2rem, 7vw, 9rem);
-      padding: 0 10vw 5vh;
+      gap: clamp(1rem, 3vw, 3rem);
+      padding: 0 4vw 4vh;
       min-height: 0;
     }
 
-    /* ── Team column ── */
-    .team-col {
+    /* ── Outer bezel (matches image's outer rounded rect) ── */
+    .card-outer {
       flex: 1;
-      max-width: 24vw;
+      max-width: 29vw;
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.75);
+      padding: 10px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    /* ── Inner card ── */
+    .card {
+      width: 100%;
       height: 100%;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
+      padding: clamp(14px, 2.5vw, 30px);
     }
 
-    /* ── Bar track ── */
-    .bar-track {
-      width: 100%;
-      flex: 1;
-      position: relative;
-      border-radius: 40px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.05);
-      overflow: visible;
-    }
-
-    /* Subtle track glow */
-    .bar-track::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(to top, transparent, rgba(255,255,255,0.04));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    /* ── Bar fill ── */
-    .bar-fill {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      border-radius: 40px;
-      transition: height 1s cubic-bezier(0.22, 1, 0.36, 1);
-      overflow: hidden;
-    }
-
-    /* Upward current animation */
-    .bar-fill::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        transparent 0%,
-        rgba(255,255,255,0.04) 35%,
-        rgba(255,255,255,0.11) 50%,
-        rgba(255,255,255,0.04) 65%,
-        transparent 100%
-      );
-      background-size: 100% 300%;
-      animation: currentUp 3s ease-in-out infinite;
-    }
-
-    @keyframes currentUp {
-      0%   { background-position: 0% 200%; }
-      100% { background-position: 0% -200%; }
-    }
-
-    /* Inner sheen */
-    .bar-fill::before {
+    /* Subtle inner gloss at top */
+    .card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 50%;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.08), transparent);
-      border-radius: 40px 40px 0 0;
+      height: 40%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+      border-radius: 24px 24px 0 0;
       pointer-events: none;
     }
 
-    /* ── Red ── */
-    .team-red .bar-fill {
-      background: linear-gradient(to top,
-        #1a0010 0%,
-        #8b0030 30%,
-        #dd1144 65%,
-        #ff5588 85%,
-        #ffaacc 100%
-      );
-      box-shadow: 0 0 40px rgba(220, 30, 80, 0.25), 0 0 80px rgba(220, 30, 80, 0.1);
-    }
-
-    /* ── Green ── */
-    .team-green .bar-fill {
-      background: linear-gradient(to top,
-        #001a0d 0%,
-        #004d22 30%,
-        #00aa55 65%,
-        #44ddaa 85%,
-        #aaffee 100%
-      );
-      box-shadow: 0 0 40px rgba(0, 200, 120, 0.25), 0 0 80px rgba(0, 200, 120, 0.1);
-    }
-
-    /* ── Blue ── */
-    .team-blue .bar-fill {
-      background: linear-gradient(to top,
-        #000a1f 0%,
-        #001566 30%,
-        #1155cc 65%,
-        #55aaff 85%,
-        #bbddff 100%
-      );
-      box-shadow: 0 0 40px rgba(60, 130, 255, 0.25), 0 0 80px rgba(60, 130, 255, 0.1);
-    }
-
-    /* ── Crown glow at top ── */
-    .bar-crown {
-      position: absolute;
-      top: -1px;
-      left: 15%;
-      right: 15%;
-      height: 3px;
-      border-radius: 50%;
-      filter: blur(4px);
-      animation: crownPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes crownPulse {
-      0%,100% { opacity: 0.5; transform: scaleX(0.8)  scaleY(1); }
-      50%     { opacity: 1;   transform: scaleX(1.15) scaleY(2); }
-    }
-
-    .team-red   .bar-crown { background: #ff88bb; box-shadow: 0 0 12px #ff3366, 0 0 24px #ff3366; }
-    .team-green .bar-crown { background: #88ffdd; box-shadow: 0 0 12px #00ffaa, 0 0 24px #00ffaa; }
-    .team-blue  .bar-crown { background: #aaddff; box-shadow: 0 0 12px #44aaff, 0 0 24px #44aaff; }
-
-    /* ── Lap number ── */
-    .lap-number {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%) translateY(50%);
-      font-size: clamp(1.8rem, 4vw, 4.5rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      white-space: nowrap;
-      transition: bottom 1s cubic-bezier(0.22, 1, 0.36, 1);
-      pointer-events: none;
-      bottom: 0;
-    }
-
-    .team-red   .lap-number { color: #ffaac8; text-shadow: 0 0 30px rgba(255,80,140,0.8),  0 0 60px rgba(255,80,140,0.3); }
-    .team-green .lap-number { color: #aaffdd; text-shadow: 0 0 30px rgba(0,255,180,0.8),   0 0 60px rgba(0,255,180,0.3); }
-    .team-blue  .lap-number { color: #bbddff; text-shadow: 0 0 30px rgba(80,180,255,0.8),  0 0 60px rgba(80,180,255,0.3); }
-
-    /* ── Team label ── */
-    .team-label {
+    /* ── Lap number row ── */
+    .lap-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3em;
+      position: relative;
+      z-index: 2;
       flex-shrink: 0;
-      margin-top: 14px;
-      font-size: clamp(0.6rem, 1vw, 0.9rem);
-      font-weight: 300;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      opacity: 0.35;
     }
 
-    /* ── Status ── */
+    .lap-number {
+      font-size: clamp(3rem, 6.5vw, 7rem);
+      font-weight: 900;
+      color: #0d0d0d;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      transition: color 0.4s;
+    }
+
+    .lap-word {
+      font-size: clamp(0.9rem, 1.5vw, 1.7rem);
+      font-weight: 700;
+      color: #222;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── COMPLETED label ── */
+    .completed {
+      font-size: clamp(0.7rem, 1.1vw, 1.3rem);
+      font-weight: 700;
+      font-style: italic;
+      color: #444;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    /* ── Arc container ── */
+    .arc-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 0 0;
+      min-height: 0;
+      position: relative;
+    }
+
+    .arc-svg {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      overflow: visible;
+    }
+
+    /* Smooth arc fill transition */
+    .arc-fill {
+      transition: stroke-dasharray 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Connection status */
     #status {
       position: fixed;
       top: 10px; right: 14px;
       font-size: 0.65rem;
       letter-spacing: 0.1em;
+      color: #555;
       opacity: 0;
       transition: opacity 0.4s;
       z-index: 10;
     }
-    #status.visible { opacity: 0.4; }
-    #status.error   { opacity: 1; color: #ff5588; }
+    #status.visible { opacity: 0.6; }
+    #status.error   { opacity: 1; color: #cc2222; }
   </style>
 </head>
 <body>
 
-  <div class="bg">
-    <div class="bg-base"></div>
-    <div class="stars"></div>
-    <div class="aurora-band band-1" id="band1"></div>
-    <div class="aurora-band band-2" id="band2"></div>
-    <div class="aurora-band band-3" id="band3"></div>
+  <!-- Logo -->
+  <div class="logo-area">
+    <img
+      src="hypernight.png"
+      alt="HyperNight"
+      onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"
+    >
+    <div class="logo-fallback" id="logo-text" style="display:none;">
+      HYPER<span>NIGHT</span>
+    </div>
   </div>
 
-  <div class="layout">
-    <div class="logo-area">
-      <img
-        src="hypernight.png"
-        alt="HyperNight"
-        onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"
-      >
-      <div class="logo-fallback" id="logo-text" style="display:none;">
-        HYPER<span>NIGHT</span>
+  <!-- Cards -->
+  <div class="cards">
+
+    <!-- RED -->
+    <div class="card-outer">
+      <div class="card">
+        <div class="lap-row">
+          <span class="lap-number" id="num-red">0</span>
+          <span class="lap-word">Laps</span>
+        </div>
+        <div class="completed">Completed</div>
+        <div class="arc-wrap">
+          <svg class="arc-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Gradient: fades from transparent orange to solid red -->
+              <linearGradient id="grad-red" x1="10%" y1="90%" x2="90%" y2="10%">
+                <stop offset="0%"   stop-color="#ff8844" stop-opacity="0"/>
+                <stop offset="35%"  stop-color="#ff5533" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#cc1111" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <!-- Background track (270° arc) -->
+            <circle cx="100" cy="105" r="75"
+              stroke="rgba(0,0,0,0.06)"
+              stroke-width="12"
+              stroke-dasharray="353.4 118"
+              stroke-linecap="round"
+              transform="rotate(135 100 105)"
+            />
+            <!-- Progress arc -->
+            <circle id="arc-red" cx="100" cy="105" r="75"
+              stroke="url(#grad-red)"
+              stroke-width="12"
+              stroke-dasharray="0 471.2"
+              stroke-linecap="round"
+              transform="rotate(135 100 105)"
+              class="arc-fill"
+            />
+          </svg>
+        </div>
       </div>
     </div>
 
-    <div class="bars-area">
-
-      <div class="team-col team-red">
-        <div class="bar-track" id="track-red">
-          <div class="bar-fill" id="bar-red">
-            <div class="bar-crown"></div>
-          </div>
-          <div class="lap-number" id="num-red">0</div>
+    <!-- GREEN -->
+    <div class="card-outer">
+      <div class="card">
+        <div class="lap-row">
+          <span class="lap-number" id="num-green">0</span>
+          <span class="lap-word">Laps</span>
         </div>
-        <div class="team-label">Rouge</div>
-      </div>
-
-      <div class="team-col team-green">
-        <div class="bar-track" id="track-green">
-          <div class="bar-fill" id="bar-green">
-            <div class="bar-crown"></div>
-          </div>
-          <div class="lap-number" id="num-green">0</div>
+        <div class="completed">Completed</div>
+        <div class="arc-wrap">
+          <svg class="arc-svg" viewBox="0 0 200 200" fill="none">
+            <defs>
+              <linearGradient id="grad-green" x1="10%" y1="90%" x2="90%" y2="10%">
+                <stop offset="0%"   stop-color="#aaff88" stop-opacity="0"/>
+                <stop offset="35%"  stop-color="#33dd77" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#11aa44" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="105" r="75"
+              stroke="rgba(0,0,0,0.06)"
+              stroke-width="12"
+              stroke-dasharray="353.4 118"
+              stroke-linecap="round"
+              transform="rotate(135 100 105)"
+            />
+            <circle id="arc-green" cx="100" cy="105" r="75"
+              stroke="url(#grad-green)"
+              stroke-width="12"
+              stroke-dasharray="0 471.2"
+              stroke-linecap="round"
+              transform="rotate(135 100 105)"
+              class="arc-fill"
+            />
+          </svg>
         </div>
-        <div class="team-label">Vert</div>
       </div>
-
-      <div class="team-col team-blue">
-        <div class="bar-track" id="track-blue">
-          <div class="bar-fill" id="bar-blue">
-            <div class="bar-crown"></div>
-          </div>
-          <div class="lap-number" id="num-blue">0</div>
-        </div>
-        <div class="team-label">Bleu</div>
-      </div>
-
     </div>
+
+    <!-- BLUE -->
+    <div class="card-outer">
+      <div class="card">
+        <div class="lap-row">
+          <span class="lap-number" id="num-blue">0</span>
+          <span class="lap-word">Laps</span>
+        </div>
+        <div class="completed">Completed</div>
+        <div class="arc-wrap">
+          <svg class="arc-svg" viewBox="0 0 200 200" fill="none">
+            <defs>
+              <linearGradient id="grad-blue" x1="10%" y1="90%" x2="90%" y2="10%">
+                <stop offset="0%"   stop-color="#88ccff" stop-opacity="0"/>
+                <stop offset="35%"  stop-color="#4499ff" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#1155dd" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="105" r="75"
+              stroke="rgba(0,0,0,0.06)"
+              stroke-width="12"
+              stroke-dasharray="353.4 118"
+              stroke-linecap="round"
+              transform="rotate(135 100 105)"
+            />
+            <circle id="arc-blue" cx="100" cy="105" r="75"
+              stroke="url(#grad-blue)"
+              stroke-width="12"
+              stroke-dasharray="0 471.2"
+              stroke-linecap="round"
+              transform="rotate(135 100 105)"
+              class="arc-fill"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div id="status">● Live</div>
 
   <script>
-    // Aurora color palettes per leader
-    const AURORA = {
-      red: {
-        band1: 'linear-gradient(90deg, transparent, rgba(200,20,60,1), rgba(255,60,100,1), transparent)',
-        band2: 'linear-gradient(90deg, transparent, rgba(180,10,50,1), rgba(220,40,80,1), transparent)',
-        band3: 'linear-gradient(90deg, transparent, rgba(120,0,40,1), transparent)',
-      },
-      green: {
-        band1: 'linear-gradient(90deg, transparent, rgba(0,180,80,1), rgba(0,255,160,1), transparent)',
-        band2: 'linear-gradient(90deg, transparent, rgba(0,150,70,1), rgba(0,220,120,1), transparent)',
-        band3: 'linear-gradient(90deg, transparent, rgba(0,100,50,1), transparent)',
-      },
-      blue: {
-        band1: 'linear-gradient(90deg, transparent, rgba(30,80,200,1), rgba(80,160,255,1), transparent)',
-        band2: 'linear-gradient(90deg, transparent, rgba(20,60,180,1), rgba(60,130,255,1), transparent)',
-        band3: 'linear-gradient(90deg, transparent, rgba(10,40,120,1), transparent)',
-      },
-      none: {
-        band1: 'linear-gradient(90deg, transparent, rgba(60,60,120,1), rgba(80,80,180,1), transparent)',
-        band2: 'linear-gradient(90deg, transparent, rgba(40,40,100,1), transparent)',
-        band3: 'linear-gradient(90deg, transparent, rgba(30,30,80,1), transparent)',
-      },
-    };
+    // r=75 → circumference = 2π×75 ≈ 471.2
+    // 270° arc → 471.2 × 0.75 = 353.4
+    const R = 75;
+    const C = 2 * Math.PI * R;   // 471.2
+    const ARC = 0.75 * C;        // 353.4  (270°)
 
     let state = { red: 0, green: 0, blue: 0, max: 50 };
-    let currentLeader = 'none';
-
-    const band1 = document.getElementById('band1');
-    const band2 = document.getElementById('band2');
-    const band3 = document.getElementById('band3');
     const statusEl = document.getElementById('status');
 
-    function getLeader() {
-      const { red, green, blue } = state;
-      const max = Math.max(red, green, blue);
-      if (max === 0) return 'none';
-      if (red === max) return 'red';
-      if (green === max) return 'green';
-      return 'blue';
-    }
-
-    function updateAurora(leader) {
-      if (leader === currentLeader) return;
-      currentLeader = leader;
-      const palette = AURORA[leader];
-      band1.style.background = palette.band1;
-      band2.style.background = palette.band2;
-      band3.style.background = palette.band3;
-    }
-
-    function updateBars(newState) {
+    function updateDisplay(newState) {
       state = newState;
-
       ['red', 'green', 'blue'].forEach((team) => {
-        const pct = state.max > 0 ? (state[team] / state.max) * 100 : 0;
-        document.getElementById(`bar-${team}`).style.height = pct + '%';
-        const num = document.getElementById(`num-${team}`);
-        num.textContent = state[team];
-        num.style.bottom = `calc(${pct}% + 16px)`;
+        const pct   = state.max > 0 ? Math.min(1, state[team] / state.max) : 0;
+        const filled = pct * ARC;
+        const empty  = C - filled;
+        document.getElementById(`arc-${team}`).setAttribute(
+          'stroke-dasharray', `${filled.toFixed(2)} ${empty.toFixed(2)}`
+        );
+        document.getElementById(`num-${team}`).textContent = state[team];
       });
-
-      updateAurora(getLeader());
     }
 
     function connect() {
@@ -475,7 +348,7 @@
 
       ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
-        if (msg.type === 'init' || msg.type === 'update') updateBars(msg.state);
+        if (msg.type === 'init' || msg.type === 'update') updateDisplay(msg.state);
       };
 
       ws.onclose = () => {
@@ -485,8 +358,6 @@
       };
     }
 
-    // Init aurora to neutral on load
-    updateAurora('none');
     connect();
   </script>
 </body>
